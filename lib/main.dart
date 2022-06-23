@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.cyan,
       ),
-      home: const MyHomePage(title: 'konversi Celcius ke lain'),
+      home: const MyHomePage(title: 'Konversi Celcius'),
     );
   }
 }
@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _fahrenheit = _celcius * 1.8 + 32;
       _kelvin = _celcius + 273;
-      _reamur = _celcius * 0.2;
+      _reamur = _celcius * 0.8;
     });
   }
 
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       
     
       resizeToAvoidBottomInset: false,
-      body: Center(
+      body: SingleChildScrollView(
               child: Column(children: <Widget>[
             Container(
               margin: EdgeInsets.all(30),
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: <Widget>[
                     Text('Suhu Fahrenheit:'),
-                    Text('$_fahrenheit °F',
+                    Text('${double.parse((_fahrenheit).toStringAsFixed(2)) } °F',
                       style: TextStyle(
                           color: Colors.grey[800],
                           fontWeight: FontWeight.bold,
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: <Widget>[
                     Text('Suhu Kelvin:'),
-                    Text('$_kelvin K',
+                    Text('${double.parse((_kelvin).toStringAsFixed(2)) } °Ré',
                       style: TextStyle(
                           color: Colors.grey[800],
                           fontWeight: FontWeight.bold,
@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: <Widget>[
                     Text('Suhu Reamur:'),
-                    Text('$_reamur °Ré',
+                    Text('${double.parse((_reamur).toStringAsFixed(2)) } °Ré',
                       style: TextStyle(
                           color: Colors.grey[800],
                           fontWeight: FontWeight.bold,
