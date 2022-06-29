@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Konversi Celcius',
       theme: ThemeData(
-        primarySwatch: Colors.cyan,
+        primarySwatch: Colors.teal,
       ),
       home: const MyHomePage(title: 'Konversi Celcius'),
     );
@@ -30,99 +30,86 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _celcius = 0;
-  double _kelvin = 0;
-  double _fahrenheit = 0;
-  double _reamur = 0;
-
-
-  void _convert() {
-    setState(() {
-      _fahrenheit = _celcius * 1.8 + 32;
-      _kelvin = _celcius + 273;
-      _reamur = _celcius * 0.8;
-    });
-  }
+  bool _state = false;
+  double _input = 0;
+  double _output = 0;
 
   @override
   Widget build(BuildContext context) {
     TextField inputField = TextField(
-      decoration: const InputDecoration(hintText: 'Masukkan nilai dalam satuan Celcius'),
+      decoration: InputDecoration(labelText: "Masukkan nilai dalam satuan ${_state == false ? "Celcius" : "Fahrenheit"}"),
       keyboardType: TextInputType.number,
       onChanged: (str) {
         try {
-          _celcius = double.parse(str);
+          _input = double.parse(str);
         } catch (e) {
-          _celcius = 0.0;
+          _input = 0.0;
         }
       },
       );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      
+    AppBar appBar = AppBar(
+      title: Text("Temperature Calculator"),
+    );
     
-      resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-              child: Column(children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(30),
-              child: inputField,
-            ),
-            Container(
-                margin: EdgeInsets.all(30),
-                child: OutlinedButton(
-                  onPressed: _convert,
-                  child: Text('Convert'),
-                )),
-            Container(
-                margin: EdgeInsets.all(5),
-                child: Column(
-                  children: <Widget>[
-                    Text('Suhu Fahrenheit:'),
-                    Text('${double.parse((_fahrenheit).toStringAsFixed(2)) } °F',
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40
-                          )
-                      ),
-                  ],
-                ), 
-                ),
-            Container(
-                margin: EdgeInsets.all(5),
-                child: Column(
-                  children: <Widget>[
-                    Text('Suhu Kelvin:'),
-                    Text('${double.parse((_kelvin).toStringAsFixed(2)) } °Ré',
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40
-                          )
-                    ),
-                  ],
-                ), 
-              ),
-              Container(
-                margin: EdgeInsets.all(5),
-                child: Column(
-                  children: <Widget>[
-                    Text('Suhu Reamur:'),
-                    Text('${double.parse((_reamur).toStringAsFixed(2)) } °Ré',
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40
-                          )
-                    ),
-                  ],
-                ), 
-              ),
-          ])),
+    Container tempSwitch = Container(
+      padding: EdgeInsets.all(15.0),
+      child: Row(
+        children:<Widget>[
+          Text("Pilih satuan yang ingin dicari :   "),
+          Text("°F"),
+          Radio(value: false, groupValue: _state, onChanged: (v) {
+                setState(() {
+                  _state= false;
+                });
+              }),
+          Text("°C"),
+          Radio(value: true, groupValue: _state, onChanged: (v) {
+                setState(() {
+                  _state= true;
+                });
+              }),
+        ]
+      ),
+    );
+
+    Container convertBtn = Container(
+      padding: EdgeInsets.all(15.0),
+      child: OutlinedButton(
+        child:Text("convert"), 
+        onPressed: (){
+          setState(() {
+           _state == false ? _output = (_input * 1.8) + 32 : _output = (_input - 32) * 5/9;      
+          });
+          AlertDialog dialog = AlertDialog(
+            content: _state == false? Text(" ${_output.toStringAsFixed(2)} °F" ):Text("${_output.toStringAsFixed(2)} °C" ) ,
+          );
+          showDialog(
+            context: context, 
+            builder: (context){
+              return dialog;
+            },
+          );
+        },
+        style: OutlinedButton.styleFrom(
+          primary: Colors.white,
+          backgroundColor: Colors.teal,
+        ),
+        ),
+    );
+
+    return Scaffold(
+      appBar: appBar,
+      body: Container(
+        padding:EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            tempSwitch,
+            inputField,
+            convertBtn,
+          ],
+        ),
+      ),
     );
   }
 }
